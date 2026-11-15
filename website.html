@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Instant Clicks - All Websites in One Site</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #202b55, #101426 55%);
+            color: white;
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-theme {
+            background: radial-gradient(circle at top, #e9efff, #cbd7f5 60%);
+            color: #17203d;
+        }
+
+        body.light-theme .tagline,
+        body.light-theme .description,
+        body.light-theme footer {
+            color: #435176;
+        }
+
+        body.light-theme .search-box input {
+            background: rgba(255, 255, 255, 0.9);
+            color: #17203d;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            right: 130px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .auth-button {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 24px;
+            background: rgba(108, 99, 255, 0.9);
+            color: white;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+
+        .auth-button.signup {
+            background: rgba(0, 212, 255, 0.9);
+            color: #101426;
+        }
+
+        .auth-button:hover {
+            filter: brightness(1.15);
+            transform: translateY(-3px);
+        }
+
+        .theme-toggle {
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            background: rgba(16, 20, 38, 0.6);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .corner-image {
+            position: absolute;
+            top: 82px;
+            right: 24px;
+            width: 90px;
+            height: 90px;
+            border: 2px solid rgba(0, 212, 255, 0.7);
+            border-radius: 18px;
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+        }
+
+        header {
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #6c63ff, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tagline {
+            margin-top: 10px;
+            color: #c8d2f2;
+            font-size: 1.05rem;
+        }
+
+        .description {
+            max-width: 680px;
+            margin: 18px auto 0;
+            color: #aeb9dc;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            margin-top: 55px;
+            color: #ffffff;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .site-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            max-width: 1000px;
+            margin: 80px auto 0;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-top: 80px;
+        }
+
+        .search-box input {
+            width: min(90%, 520px);
+            padding: 16px 22px;
+            border: 2px solid rgba(0, 212, 255, 0.6);
+            border-radius: 30px;
+            outline: none;
+            background: rgba(16, 20, 38, 0.85);
+            color: white;
+            font: inherit;
+            font-size: 1rem;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.18);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .search-box input::placeholder {
+            color: #b8c1df;
+        }
+
+        .search-box input:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 25px rgba(108, 99, 255, 0.45);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .filters select {
+            padding: 10px 16px;
+            border: 1px solid rgba(0, 212, 255, 0.55);
+            border-radius: 22px;
+            background: #151b35;
+            color: white;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .shortcut-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .favorite-button {
+            width: 30px;
+            height: 30px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffd45c;
+            cursor: pointer;
+            font-size: 1.15rem;
+        }
+
+        .favorite-button:hover,
+        .favorite-button.is-favorite {
+            background: rgba(255, 212, 92, 0.25);
+        }
+
+        .recent-websites {
+            max-width: 1000px;
+            margin: 28px auto 0;
+            color: #c8d2f2;
+            font-size: 0.9rem;
+        }
+
+        .recent-websites a {
+            display: inline-block;
+            margin: 8px 5px 0;
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .site-stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin: 28px auto 0;
+        }
+
+        .stat-card {
+            min-width: 150px;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            background: rgba(21, 27, 53, 0.65);
+            color: #c8d2f2;
+            font-size: 0.85rem;
+        }
+
+        .stat-card strong {
+            display: block;
+            color: #00d4ff;
+            font-size: 1.25rem;
+        }
+
+        .help-section {
+            max-width: 780px;
+            margin: 70px auto 0;
+            text-align: left;
+        }
+
+        .help-section h2 {
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .help-section details {
+            margin: 10px 0;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            background: rgba(21, 27, 53, 0.62);
+            color: #c8d2f2;
+        }
+
+        .help-section summary {
+            cursor: pointer;
+            color: white;
+            font-weight: 700;
+        }
+
+        .help-section details p {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 20;
+            display: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: #252d50;
+            color: white;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .back-to-top {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 10;
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 50%;
+            background: #6c63ff;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top.visible {
+            display: block;
+        }
+
+        .quick-tools {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tool-button,
+        .clock-card,
+        .weather-card {
+            padding: 9px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(21, 27, 53, 0.8);
+            color: #dce5ff;
+            font: inherit;
+            font-size: 0.85rem;
+        }
+
+        .tool-button {
+            cursor: pointer;
+        }
+
+        .tool-button:hover {
+            background: #5148c9;
+        }
+
+        .custom-site-form {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 18px auto 0;
+        }
+
+        .custom-site-form.open {
+            display: flex;
+        }
+
+        .custom-site-form input {
+            width: min(40%, 220px);
+            padding: 10px 12px;
+            border: 1px solid #58628f;
+            border-radius: 10px;
+            background: #151b35;
+            color: white;
+            font: inherit;
+        }
+
+        .dragging {
+            opacity: 0.45;
+        }
+
+        .shortcut-item {
+            cursor: grab;
+        }
+
+        .shortcut-item:active {
+            cursor: grabbing;
+        }
+
+        .site-icon {
+            opacity: 0;
+            animation: iconFadeIn 0.45s ease forwards;
+        }
+
+        @keyframes iconFadeIn {
+            to { opacity: 1; }
+        }
+
+        .site-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 145px;
+            padding: 14px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 14px;
+            background: #ff0000;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+        }
+
+        .site-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .site-button:hover {
+            filter: brightness(1.15);
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 14px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .zomato { background: #e23744; }
+        .swiggy { background: #fc8019; }
+        .chatgpt { background: #10a37f; }
+        .gemini { background: #4285f4; }
+        .amazon { background: #ff9900; color: #111; }
+        .flipkart { background: #2874f0; }
+        .netflix { background: #e50914; }
+        .prime { background: #00a8e1; }
+        .hotstar { background: #1f4fff; }
+        .google { background: #4285f4; }
+        .gmail { background: #ea4335; }
+        .whatsapp { background: #25d366; color: #102116; }
+        .instagram { background: #d6249f; }
+        .facebook { background: #1877f2; }
+        .linkedin { background: #0a66c2; }
+        .spotify { background: #1db954; color: #102116; }
+        .github { background: #24292f; }
+        .maps { background: #34a853; }
+
+        .zomato:hover { background: #b91f2c; }
+        .swiggy:hover { background: #d9680d; }
+        .chatgpt:hover { background: #087f62; }
+        .gemini:hover { background: #2868c7; }
+        .amazon:hover { background: #cc7a00; }
+        .flipkart:hover { background: #155ac7; }
+        .netflix:hover { background: #b20710; }
+        .prime:hover { background: #087fa8; }
+        .hotstar:hover { background: #163bbd; }
+        .google:hover { background: #285fc2; }
+        .gmail:hover { background: #c52c20; }
+        .whatsapp:hover { background: #18a84d; }
+        .instagram:hover { background: #a9187e; }
+        .facebook:hover { background: #0d5fca; }
+        .linkedin:hover { background: #084b8f; }
+        .spotify:hover { background: #15913f; }
+        .github:hover { background: #111418; }
+        .maps:hover { background: #24813e; }
+
+        footer {
+            padding: 40px 20px 25px;
+            color: #8995bd;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 600px) {
+            .top-nav {
+                top: 14px;
+                left: 14px;
+                right: 90px;
+            }
+
+            .auth-button {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+
+            .theme-toggle {
+                padding: 6px 9px;
+            }
+
+            .corner-image {
+                top: 74px;
+                right: 14px;
+                width: 64px;
+                height: 64px;
+            }
+
+            header {
+                padding-top: 105px;
+            }
+
+            .site-button {
+                min-width: 135px;
+                padding: 12px 16px;
+            }
+
+            .back-to-top {
+                right: 16px;
+                bottom: 16px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav" aria-label="Account navigation">
+        <button class="auth-button" type="button" onclick="showSignInMessage()">Sign In</button>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme">☀️</button>
+        <button class="auth-button signup" type="button" onclick="showSignInMessage()">Sign Up</button>
+    </nav>
+    <img class="corner-image" src="Instant Clicks Neon App Logo.png" alt="Instant Clicks logo">
+    <header>
+        <h1>Instant Clicks</h1>
+        <p class="tagline" id="welcomeMessage">Welcome to Instant Clicks.</p>
+        <p class="description">
+            Instant Clicks is a simple shortcut hub that brings your favorite entertainment,
+            shopping, food delivery, and AI websites together in one convenient place.
+        </p>
+        <div class="search-box">
+            <input id="websiteSearch" type="search" placeholder="Search websites..." aria-label="Search websites">
+        </div>
+        <div class="filters" aria-label="Website filters">
+            <label for="categoryFilter" class="sr-only">Filter websites by category</label>
+            <select id="categoryFilter">
+                <option value="all">All categories</option>
+                <option value="ai">AI &amp; Tools</option>
+                <option value="shopping">Shopping</option>
+                <option value="food">Food Delivery</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="social">Social</option>
+                <option value="work">Work &amp; Learning</option>
+            </select>
+        </div>
+        <div class="quick-tools" aria-label="Quick tools">
+            <span class="clock-card" id="clockCard">Loading time...</span>
+            <span class="weather-card" id="weatherCard">Loading weather...</span>
+            <button class="tool-button" id="surpriseButton" type="button">Surprise Me</button>
+            <button class="tool-button" id="customSiteButton" type="button">Add Website</button>
+            <button class="tool-button" id="exportButton" type="button">Export Favorites</button>
+            <button class="tool-button" id="importButton" type="button">Import Favorites</button>
+            <button class="tool-button" id="shareButton" type="button">Share Site</button>
+            <input id="importFile" type="file" accept="application/json" hidden>
+        </div>
+        <form class="custom-site-form" id="customSiteForm">
+            <input id="customSiteName" type="text" placeholder="Website name" required>
+            <input id="customSiteUrl" type="url" placeholder="https://example.com" required>
+            <button class="tool-button" type="submit">Add Shortcut</button>
+        </form>
+        <h2 class="section-title">Explore Popular Websites</h2>
+        <div class="site-buttons">
+            <a class="site-button" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/youtube/ffffff" alt="">
+                YouTube
+            </a>
+            <a class="site-button zomato" href="https://www.zomato.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/zomato/ffffff" alt="">
+                Zomato
+            </a>
+            <a class="site-button swiggy" href="https://www.swiggy.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/swiggy/ffffff" alt="">
+                Swiggy
+            </a>
+            <a class="site-button chatgpt" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://openai.com/favicon.ico" alt="">
+                ChatGPT
+            </a>
+            <a class="site-button gemini" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="">
+                Gemini
+            </a>
+            <a class="site-button amazon" href="https://www.amazon.in/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://www.amazon.in/favicon.ico" alt="">
+                Amazon
+            </a>
+            <a class="site-button flipkart" href="https://www.flipkart.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://www.flipkart.com/favicon.ico" alt="">
+                Flipkart
+            </a>
+            <a class="site-button netflix" href="https://www.netflix.com/in/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/netflix/ffffff" alt="">
+                Netflix
+            </a>
+            <a class="site-button prime" href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://www.primevideo.com/favicon.ico" alt="">
+                Amazon Prime
+            </a>
+            <a class="site-button hotstar" href="https://www.hotstar.com/in/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://www.hotstar.com/favicon.ico" alt="">
+                JioHotstar
+            </a>
+            <a class="site-button google" href="https://www.google.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/google/ffffff" alt="">
+                Google
+            </a>
+            <a class="site-button gmail" href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/gmail/ffffff" alt="">
+                Gmail
+            </a>
+            <a class="site-button whatsapp" href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/whatsapp/102116" alt="">
+                WhatsApp
+            </a>
+            <a class="site-button instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/instagram/ffffff" alt="">
+                Instagram
+            </a>
+            <a class="site-button facebook" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/facebook/ffffff" alt="">
+                Facebook
+            </a>
+            <a class="site-button linkedin" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://www.linkedin.com/favicon.ico" alt="">
+                LinkedIn
+            </a>
+            <a class="site-button spotify" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/spotify/102116" alt="">
+                Spotify
+            </a>
+            <a class="site-button github" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/github/ffffff" alt="">
+                GitHub
+            </a>
+            <a class="site-button maps" href="https://maps.google.com/" target="_blank" rel="noopener noreferrer">
+                <img class="site-icon" src="https://cdn.simpleicons.org/googlemaps/ffffff" alt="">
+                Google Maps
+            </a>
+        </div>
+        <div class="recent-websites" id="recentWebsites" hidden></div>
+        <div class="site-stats" aria-label="Website statistics">
+            <div class="stat-card"><strong id="shortcutCount">0</strong>shortcuts</div>
+            <div class="stat-card"><strong id="favoriteCount">0</strong>favorites</div>
+            <div class="stat-card"><strong id="visitCount">0</strong>visits</div>
+        </div>
+
+        <section class="help-section" aria-labelledby="helpTitle">
+            <h2 id="helpTitle">Quick Help</h2>
+            <details>
+                <summary>How do I find a website?</summary>
+                <p>Use the search bar or choose a category. You can also press <strong>/</strong> to focus the search bar.</p>
+            </details>
+            <details>
+                <summary>How do favorites work?</summary>
+                <p>Click the star next to any shortcut. Favorites are saved locally in your browser.</p>
+            </details>
+            <details>
+                <summary>How do I add my own website?</summary>
+                <p>Choose “Add Website”, enter its name and full HTTPS address, then select “Add Shortcut”.</p>
+            </details>
+        </section>
+    </header>
+
+    <footer>
+        <p>Made with HTML, CSS, and JavaScript &bull; Instant Clicks</p>
+        <p><a href="#privacy">Privacy</a> &bull; <a href="#terms">Terms</a></p>
+    </footer>
+
+    <div id="privacy" hidden>Instant Clicks does not collect personal data in this local version.</div>
+    <div id="terms" hidden>Use Instant Clicks responsibly and follow each service's terms.</div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑</button>
+
+    <script>
+        function showSignInMessage() {
+            alert('Sign-in will be available when an account system is connected.');
+        }
+
+        const searchInput = document.getElementById('websiteSearch');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const websiteButtons = [...document.querySelectorAll('.site-button')];
+        const recentWebsites = document.getElementById('recentWebsites');
+        const themeToggle = document.getElementById('themeToggle');
+        const toast = document.getElementById('toast');
+        const backToTop = document.getElementById('backToTop');
+        const shareButton = document.getElementById('shareButton');
+        const shortcutCount = document.getElementById('shortcutCount');
+        const favoriteCount = document.getElementById('favoriteCount');
+        const visitCount = document.getElementById('visitCount');
+        const favorites = JSON.parse(localStorage.getItem('instantClicksFavorites') || '{}');
+        const recent = JSON.parse(localStorage.getItem('instantClicksRecent') || '[]');
+        const visitTotal = Number(localStorage.getItem('instantClicksVisitTotal') || 0);
+
+        const categoryMap = {
+            youtube: 'entertainment', zomato: 'food', swiggy: 'food', chatgpt: 'ai', gemini: 'ai',
+            amazon: 'shopping', flipkart: 'shopping', netflix: 'entertainment', 'amazon prime': 'entertainment',
+            jiohotstar: 'entertainment', google: 'work', gmail: 'work', whatsapp: 'social',
+            instagram: 'social', facebook: 'social', linkedin: 'work', spotify: 'entertainment',
+            github: 'work', 'google maps': 'work'
+        };
+
+        function getName(button) {
+            return button.textContent.trim().toLowerCase();
+        }
+
+        function renderRecent() {
+            if (!recent.length) {
+                recentWebsites.hidden = true;
+                return;
+            }
+
+            recentWebsites.hidden = false;
+            recentWebsites.innerHTML = '<strong>Recently visited:</strong> ';
+            recent.forEach(name => {
+                const button = websiteButtons.find(item => getName(item) === name);
+                if (!button) return;
+                const link = document.createElement('a');
+                link.href = button.href;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = button.textContent.trim();
+                recentWebsites.appendChild(link);
+            });
+        }
+
+        function rememberVisit(button) {
+            const name = getName(button);
+            const updated = [name, ...recent.filter(item => item !== name)].slice(0, 5);
+            recent.splice(0, recent.length, ...updated);
+            localStorage.setItem('instantClicksRecent', JSON.stringify(recent));
+            localStorage.setItem('instantClicksVisitTotal', String(Number(localStorage.getItem('instantClicksVisitTotal') || 0) + 1));
+            renderRecent();
+            updateStats();
+        }
+
+        function updateStats() {
+            shortcutCount.textContent = websiteButtons.length;
+            favoriteCount.textContent = Object.values(favorites).filter(Boolean).length;
+            visitCount.textContent = localStorage.getItem('instantClicksVisitTotal') || visitTotal;
+        }
+
+        websiteButtons.forEach((button) => {
+            const name = getName(button);
+            const item = document.createElement('div');
+            item.className = 'shortcut-item';
+            item.draggable = true;
+            item.dataset.category = categoryMap[name] || 'work';
+            button.parentNode.insertBefore(item, button);
+            item.appendChild(button);
+
+            const favorite = document.createElement('button');
+            favorite.className = 'favorite-button';
+            favorite.type = 'button';
+            favorite.setAttribute('aria-label', `Favorite ${button.textContent.trim()}`);
+            favorite.textContent = favorites[name] ? '★' : '☆';
+            favorite.classList.toggle('is-favorite', Boolean(favorites[name]));
+            item.appendChild(favorite);
+
+            favorite.addEventListener('click', (event) => {
+                event.stopPropagation();
+                favorites[name] = !favorites[name];
+                favorite.textContent = favorites[name] ? '★' : '☆';
+                favorite.classList.toggle('is-favorite', favorites[name]);
+                localStorage.setItem('instantClicksFavorites', JSON.stringify(favorites));
+                updateStats();
+            });
+
+            button.addEventListener('click', () => rememberVisit(button));
+        });
+
+        const savedOrder = JSON.parse(localStorage.getItem('instantClicksOrder') || '[]');
+        savedOrder.forEach(name => {
+            const button = websiteButtons.find(item => item.textContent.trim() === name);
+            if (button) document.querySelector('.site-buttons').appendChild(button.closest('.shortcut-item'));
+        });
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedCategory = categoryFilter.value;
+
+            websiteButtons.forEach((button) => {
+                const item = button.closest('.shortcut-item');
+                const matchesSearch = getName(button).includes(searchTerm);
+                const matchesCategory = selectedCategory === 'all' || item.dataset.category === selectedCategory;
+                item.style.display = matchesSearch && matchesCategory ? 'flex' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        categoryFilter.addEventListener('change', applyFilters);
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('instantClicksTheme', isLight ? 'light' : 'dark');
+            themeToggle.textContent = isLight ? '🌙' : '☀️';
+        });
+
+        if (localStorage.getItem('instantClicksTheme') === 'light') {
+            document.body.classList.add('light-theme');
+            themeToggle.textContent = '🌙';
+        }
+
+        const hour = new Date().getHours();
+        document.getElementById('welcomeMessage').textContent =
+            hour < 12 ? 'Good morning! Your favorite websites are one click away.' :
+            hour < 18 ? 'Good afternoon! Your favorite websites are one click away.' :
+            'Good evening! Your favorite websites are one click away.';
+
+        renderRecent();
+        updateStats();
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+
+        shareButton.addEventListener('click', async () => {
+            const shareData = {
+                title: 'Instant Clicks',
+                text: 'Open my Instant Clicks shortcut hub.',
+                url: window.location.href
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    await navigator.clipboard.writeText(window.location.href);
+                    showToast('Website link copied.');
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') showToast('Unable to share right now.');
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const clockCard = document.getElementById('clockCard');
+        const weatherCard = document.getElementById('weatherCard');
+        const customSiteButton = document.getElementById('customSiteButton');
+        const customSiteForm = document.getElementById('customSiteForm');
+        const customSiteName = document.getElementById('customSiteName');
+        const customSiteUrl = document.getElementById('customSiteUrl');
+        const surpriseButton = document.getElementById('surpriseButton');
+        const exportButton = document.getElementById('exportButton');
+        const importButton = document.getElementById('importButton');
+        const importFile = document.getElementById('importFile');
+
+        function updateClock() {
+            const now = new Date();
+            clockCard.textContent = now.toLocaleString([], {
+                weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        function loadWeather() {
+            if (!navigator.geolocation) {
+                weatherCard.textContent = 'Location is not supported';
+                return;
+            }
+
+            weatherCard.textContent = 'Detecting your location...';
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+
+                try {
+                    const [weatherResponse, placeResponse] = await Promise.all([
+                        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`),
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`)
+                    ]);
+                    const weather = await weatherResponse.json();
+                    const place = await placeResponse.json();
+                    const address = place.address || {};
+                    const locationName = address.city || address.town || address.village || address.county || 'Your location';
+                    weatherCard.textContent = `${locationName}: ${Math.round(weather.current.temperature_2m)}°C`;
+                } catch (error) {
+                    weatherCard.textContent = 'Weather unavailable';
+                }
+            }, () => {
+                weatherCard.textContent = 'Allow location for weather';
+            }, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            });
+        }
+
+        loadWeather();
+
+        surpriseButton.addEventListener('click', () => {
+            const visible = websiteButtons.filter(button => button.closest('.shortcut-item').style.display !== 'none');
+            const choices = visible.length ? visible : websiteButtons;
+            const choice = choices[Math.floor(Math.random() * choices.length)];
+            choice.click();
+        });
+
+        customSiteButton.addEventListener('click', () => {
+            customSiteForm.classList.toggle('open');
+            if (customSiteForm.classList.contains('open')) customSiteName.focus();
+        });
+
+        customSiteForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = customSiteName.value.trim();
+            const url = customSiteUrl.value.trim();
+            if (!name || !url) return;
+
+            const item = document.createElement('div');
+            item.className = 'shortcut-item';
+            item.draggable = true;
+            item.dataset.category = 'work';
+            const link = document.createElement('a');
+            link.className = 'site-button github';
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = name;
+            item.appendChild(link);
+            document.querySelector('.site-buttons').appendChild(item);
+            websiteButtons.push(link);
+            link.addEventListener('click', () => rememberVisit(link));
+            customSiteForm.reset();
+            customSiteForm.classList.remove('open');
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === '/' && document.activeElement.tagName !== 'INPUT') {
+                event.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        document.querySelectorAll('.shortcut-item').forEach(item => {
+            item.addEventListener('dragstart', () => item.classList.add('dragging'));
+            item.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+                localStorage.setItem('instantClicksOrder', JSON.stringify(
+                    [...document.querySelectorAll('.shortcut-item .site-button')].map(button => button.textContent.trim())
+                ));
+            });
+            item.addEventListener('dragover', event => {
+                event.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                if (dragging && dragging !== item) item.parentNode.insertBefore(dragging, item);
+            });
+        });
+
+        exportButton.addEventListener('click', () => {
+            const file = new Blob([JSON.stringify(favorites, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(file);
+            link.download = 'instant-clicks-favorites.json';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
+        importButton.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', () => {
+            const file = importFile.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    Object.assign(favorites, JSON.parse(reader.result));
+                    localStorage.setItem('instantClicksFavorites', JSON.stringify(favorites));
+                    location.reload();
+                } catch (error) {
+                    alert('That favorites file is not valid JSON.');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+    </script>
+</body>
+</html>
